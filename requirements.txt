@@ -1,41 +1,44 @@
-Quart
-discord
-discord.py
-discord.ui
-jishaku
-asyncio
+# Discord
+discord.py>=2.3.0
 discord-ext-menus
-aiohttp
-datetime
-flask
-typing
-psutil
-collection
-requests
-pathlib
-pymongo
-wavelink
-httpx
-discord.ext-context
-tasksio
-motor
-Augmentor
-numpy
-aiosqlite
-gtts
-langdetect
-python-dotenv
-pyttsx3
-PyYAML
-Requests
-openai
-duckduckgo-search==6.3.6
-colorama
-chess
-python-dateutil
-deep-translator==1.11.4
+jishaku
+
+# Web framework
 fastapi
 uvicorn
+quart
+flask
+
+# Database
+pymongo
+motor
 asyncpg
-chat_exporter
+aiosqlite
+
+# HTTP / Network
+aiohttp
+httpx
+requests
+
+# Utils
+psutil
+python-dotenv
+PyYAML
+colorama
 pyfiglet
+python-dateutil
+
+# Music
+wavelink
+
+# Features
+gtts
+langdetect
+pyttsx3
+chess
+deep-translator==1.11.4
+duckduckgo-search==6.3.6
+chat_exporter
+openai
+numpy
+Augmentor
