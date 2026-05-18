@@ -71,15 +71,15 @@ class Wavelink(commands.Cog):
             self._ensure_controller_refresh_task(guild.id)
             logger.warning(f"Track {payload.track} has started playing on player {guild.name}")
 
-   @commands.Cog.listener()
+    @commands.Cog.listener()
     async def on_wavelink_track_exception(self, payload: wavelink.TrackExceptionEventPayload):
         guild_name = payload.player.guild.name if payload.player and payload.player.guild else "Unknown"
         logger.error(f"An exception occurred while playing track {payload.track} on player {guild_name}: {payload.exception}")
 
-
     @commands.Cog.listener()
     async def on_wavelink_track_stuck(self, payload: wavelink.TrackStuckEventPayload):
-        logger.error(f"Track {payload.track} got stuck on player {payload.player.guild.name}")
+        guild_name = payload.player.guild.name if payload.player and payload.player.guild else "Unknown"
+        logger.error(f"Track {payload.track} got stuck on player {guild_name}")
 
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, payload: wavelink.TrackEndEventPayload):
@@ -91,7 +91,7 @@ class Wavelink(commands.Cog):
             if not player or not guild:
                 return
             self._stop_controller_refresh_task(guild.id)
-            
+
             MusicCog = self.bot.get_cog("Music")
             if not MusicCog:
                 return logger.error("Music Cog not found in track end handler.")
@@ -107,11 +107,12 @@ class Wavelink(commands.Cog):
 
             # Check if the queue is empty
             if player.queue.is_empty and not player.queue.mode == wavelink.QueueMode.loop:
+
                 # If the queue is empty but the player is still playing, log it
                 if player.current:
                     logger.info(f"Queue is empty, but the player is still playing {player.current.title}")
                     return
-                
+
                 # Disconnect if there's nothing left to play
                 await player.disconnect()
                 logger.info(f"Queue is empty. Disconnected from {guild.name}.")
@@ -128,7 +129,7 @@ class Wavelink(commands.Cog):
                 await MusicCog.send_music_controls(guild=guild, update_attachments=True)
         except Exception as e:
             logger.error(f"Error in track end handler: {traceback.format_exc()}")
-    
+
     @commands.Cog.listener()
     async def on_wavelink_stats_update(self, payload: wavelink.StatsEventPayload):
         # logger.warning(f"WaveLink Stats updated: {payload.players} players total ({payload.playing} playing)")
