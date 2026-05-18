@@ -71,9 +71,11 @@ class Wavelink(commands.Cog):
             self._ensure_controller_refresh_task(guild.id)
             logger.warning(f"Track {payload.track} has started playing on player {guild.name}")
 
-    @commands.Cog.listener()
+   @commands.Cog.listener()
     async def on_wavelink_track_exception(self, payload: wavelink.TrackExceptionEventPayload):
-        logger.error(f"An exception occurred while playing track {payload.track} on player {payload.player.guild.name}: {payload.exception}")
+        guild_name = payload.player.guild.name if payload.player and payload.player.guild else "Unknown"
+        logger.error(f"An exception occurred while playing track {payload.track} on player {guild_name}: {payload.exception}")
+
 
     @commands.Cog.listener()
     async def on_wavelink_track_stuck(self, payload: wavelink.TrackStuckEventPayload):
