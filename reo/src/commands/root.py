@@ -2123,65 +2123,16 @@ class Root(commands.Cog):
         name="python", help="Executes a python code", hidden=True, aliases=["py"]
     )
     @checks.is_owner()
-    async def python(self, ctx: commands.Context, *, code: str):
-
-        try:
-
-            # Remove code block formatting
-
-            code = code.replace("```", "").replace("py", "").strip()
-
-            # Prepare the environment
-
-            env = {
-                "ctx": ctx,
-                "bot": self.bot,
-                "discord": discord,
-                "commands": commands,
-                "__import__": __import__,
-            }
-
-            # Capture the output
-
-            stdout = StringIO()
-
-            # Define the code execution
-
-            exec_code = f'async def _exec(ctx):\n{textwrap.indent(code, "    ")}'
-
-            # Compile and execute the code
-
-            exec(exec_code, env)
-
-            async def run_code():
-
-                with redirect_stdout(stdout):
-
-                    await env["_exec"](ctx)
-
-            # Run the code with a timeout (max 5 seconds)
-
-            await asyncio.wait_for(run_code(), timeout=5)
-
-            # Output the result
-
-            result = stdout.getvalue()
-
-            if result:
-
-                await ctx.send(f"```\n{result}\n```")
-
-            else:
-
-                await ctx.send("`No output.`")
-
-        except asyncio.TimeoutError:
-
-            await ctx.send("Error: Code execution took too long (max 5s).")
-
-        except Exception as e:
-
-            await ctx.send(f"Error: {e}")
+    async def python(self, ctx: commands.Context, *, code: str = None):
+        # Arbitrary Python execution permanently disabled for security.
+        # See SECURITY.md / audit report (Finding #2).
+        await ctx.send(
+            embed=discord.Embed(
+                description="`?python` command is disabled for security reasons.",
+                color=color.red,
+            ),
+            delete_after=10,
+        )
 
     @root.command(
         name="emojis", help="Shows the list of emojis the bot has", hidden=True

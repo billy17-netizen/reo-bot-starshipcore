@@ -1302,13 +1302,16 @@ class Moderation(commands.Cog):
                 await ctx.send(embed=discord.Embed(description=f"{member.mention} is already muted",color=color.red),delete_after=10)
                 return
             
-            # convert time from 1s, 1m, 1h, 1d to seconds
-            
+            # convert time from 1s, 1m, 1h, 1d to seconds (safe regex parser)
             try:
-                time = time.lower()
-                if time:
-                    time = time.replace('s','').replace('m','*60').replace('h','*60*60').replace('d','*60*60*24')
-                    time = eval(time)
+                import re
+                match = re.match(r'^(\d+)([smhd])$', time.strip().lower())
+                if match:
+                    value, unit = int(match.group(1)), match.group(2)
+                    multipliers = {'s': 1, 'm': 60, 'h': 3600, 'd': 86400}
+                    time = value * multipliers[unit]
+                else:
+                    time = None
             except Exception as e:
                 time = None
                 
